@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  hetzner-dns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hetzner-dns-dyn
+    restart: always
+    volumes:
+      - ./cfg:/app/cfg
+    environment:
+      - HETZNER_DNS_VAULT_ADDR=${HETZNER_DNS_VAULT_ADDR}
+      - HETZNER_DNS_VAULT_AUTH_NAME=${HETZNER_DNS_VAULT_AUTH_NAME}
+      - HETZNER_DNS_VAULT_ROLE_ID=${HETZNER_DNS_VAULT_ROLE_ID}
+      - HETZNER_DNS_VAULT_SECRET_STORE_NAME=${HETZNER_DNS_VAULT_SECRET_STORE_NAME}
+      - HETZNER_DNS_VAULT_SECRET_STORE_PATH=${HETZNER_DNS_VAULT_SECRET_STORE_PATH}
+      - HETZNER_DNS_ZONES_CONFIG_FILE=/app/cfg/k8t.yaml
+      - HETZNER_DNS_ZONES_UPDATE_INTERVAL=${HETZNER_DNS_ZONES_UPDATE_INTERVAL}
+      - HETZNER_DNS_USE_VAULT=${HETZNER_DNS_USE_VAULT}

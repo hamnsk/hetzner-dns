@@ -1,0 +1,51 @@
+builds:
+  - main: cmd/service/main.go
+    binary: hetzner-dns
+    flags: -tags netgo
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X hetzner-dns/internal/version.BuildTime={{.Date}}
+      - -X hetzner-dns/internal/version.Commit={{.FullCommit}}
+      - -X hetzner-dns/internal/version.Version={{.Version}}
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: windows
+        goarch: 386
+      - goos: windows
+        goarch: amd64
+dockers:
+  - image_templates:
+      - "ghcr.io/hamnsk/hetzner-dns:{{ .Version }}"
+      - "ghcr.io/hamnsk/hetzner-dns:latest"
+    dockerfile: 'Dockerfile'
+    build_flag_templates:
+      - "--platform=linux/amd64"
+archives:
+  - name_template: "hetzner-dns-{{ .Version }}.{{ .Os }}-{{ .Arch }}"
+    wrap_in_directory: true
+checksum:
+  name_template: checksums.txt
+nfpms:
+  - homepage: https://github.com/hamnsk/hetzner-dns
+    maintainer: s.andrynin@gmail.com
+    description: Hetzner Dynamic DNS Utility
+    license: GPLv3
+    formats:
+      - deb
+      - rpm
+    bindir: /opt/k11s/hetzner-dns/hetzner-dns
+release:
+  github:
+    owner: hamnsk
+    name: hetzner-dns
+  draft: false
+  prerelease: false
