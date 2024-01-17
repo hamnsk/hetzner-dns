@@ -24,7 +24,11 @@ func (c *Client) GetZones() (DnsZones, error) {
 	// Get Zones (GET https://dns.hetzner.com/api/v1/zones)
 
 	// Create request
+
 	req, err := http.NewRequest("GET", "https://dns.hetzner.com/api/v1/zones", nil)
+	if err != nil {
+		return DnsZones{}, err
+	}
 
 	// Headers
 	req.Header.Add("Auth-API-Token", c.token)
@@ -99,6 +103,10 @@ func (c *Client) UpdateRecord(recordId string, payload []byte) error {
 	// Create request
 	req, err := http.NewRequest("PUT", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%s", recordId), body)
 
+	if err != nil {
+		return err
+	}
+
 	// Headers
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Auth-API-Token", c.token)
@@ -116,6 +124,10 @@ func (c *Client) CreateRecord(payload []byte) error {
 
 	// Create request
 	req, err := http.NewRequest("POST", "https://dns.hetzner.com/api/v1/records", body)
+
+	if err != nil {
+		return err
+	}
 
 	// Headers
 	req.Header.Add("Content-Type", "application/json")
